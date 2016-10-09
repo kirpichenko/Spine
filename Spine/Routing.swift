@@ -147,7 +147,7 @@ public class JSONAPIRouter: Router {
 		// Fields
 		for (resourceType, fields) in query.fields {
 			let keys = fields.map { fieldName in
-				return keyFormatter.format(T.fieldNamed(fieldName)!)
+				return keyFormatter.format(fieldName)
 			}
 			let item = NSURLQueryItem(name: "fields[\(resourceType)]", value: keys.joinWithSeparator(","))
 			setQueryItem(item, forQueryItems: &queryItems)

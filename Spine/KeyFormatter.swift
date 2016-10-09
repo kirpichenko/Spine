@@ -13,7 +13,13 @@ The KeyFormatter protocol declares methods and properties that a key formatter m
 A key formatter transforms field names as they appear in Resources to keys as they appear in a JSONAPI document.
 */
 public protocol KeyFormatter {
-	func format(field: Field) -> String
+	func format(name: String) -> String
+}
+
+extension KeyFormatter {
+	func format(field: Field) -> String {
+		return format(field.serializedName);
+	}
 }
 
 /**
@@ -21,8 +27,8 @@ AsIsKeyFormatter does not format anything, i.e. it returns the field name as it.
 keys in a JSONAPI document one to one.
 */
 public struct AsIsKeyFormatter: KeyFormatter {
-	public func format(field: Field) -> String {
-		return field.serializedName
+	public func format(name: String) -> String {
+		return name;
 	}
 	
 	public init() { }
@@ -34,8 +40,7 @@ DasherizedKeyFormatter formats field names as dasherized keys. Eg. someFieldName
 public struct DasherizedKeyFormatter: KeyFormatter {
 	let regex: NSRegularExpression
 	
-	public func format(field: Field) -> String {
-		let name = field.serializedName
+	public func format(name: String) -> String {
 		let dashed = regex.stringByReplacingMatchesInString(name, options: NSMatchingOptions(), range: NSMakeRange(0, name.characters.count), withTemplate: "-$1$2")
 		return dashed.lowercaseString.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "-"))
 	}
@@ -51,10 +56,9 @@ UnderscoredKeyFormatter formats field names as underscored keys. Eg. someFieldNa
 public struct UnderscoredKeyFormatter: KeyFormatter {
 	let regex: NSRegularExpression
 	
-	public func format(field: Field) -> String {
-		let name = field.serializedName
-		let underscored = regex.stringByReplacingMatchesInString(name, options: NSMatchingOptions(), range: NSMakeRange(0, name.characters.count), withTemplate: "_$1$2")
-		return underscored.lowercaseString.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "_"))
+	public func format(name: String) -> String {
+        let underscored = regex.stringByReplacingMatchesInString(name, options: NSMatchingOptions(), range: NSMakeRange(0, name.characters.count), withTemplate: "_$1$2")
+        return underscored.lowercaseString.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "_"))
 	}
 	
 	public init() {
