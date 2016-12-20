@@ -141,7 +141,7 @@ open class Resource: NSObject, NSCoding {
 	}
 
 	/// Sets the value for the field named `field` to `value`.
-	func setValue(_ value: Any?, forField field: String) {
+	open func setValue(_ value: Any?, forField field: String) {
 		setValue(value, forKey: field)
 	}
 
